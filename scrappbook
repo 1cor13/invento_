@@ -1,0 +1,21 @@
+endpoints. views
+add inventory items
+ inventory items overview list
+ edit inventory item affects inventory totals
+
+add services
+ view services
+
+add customers
+ create a user profile for them
+ 
+add users roles
+create orders
+  associate a customer
+  create orderlineitems
+  affect the inventoryitems
+  if inventory is at a certain threshold notify the admin or manager
+
+view orders
+edit orders
+
