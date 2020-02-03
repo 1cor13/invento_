@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Route::resource('mydata', 'SampleController');
+Route::resource('inventory', 'InventoryController');
