@@ -1,8 +1,8 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+// /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\InventoryItem;
+use App\InventoryItem; 
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
