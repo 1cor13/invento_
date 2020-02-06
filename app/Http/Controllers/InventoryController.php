@@ -27,7 +27,7 @@ class InventoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('inventory.create');
     }
 
     /**
@@ -38,7 +38,12 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        $inventoryItem = $this->updateItem($request, null);
+        $inventoryItem->save();
+
+        return redirect('inventory')
+            ->with('success', 'Inventory item stored successfully');
     }
 
     /**
@@ -49,7 +54,8 @@ class InventoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $inventory = InventoryItem::findOrFail($id);
+        return view('inventory.show', compact('inventory'));
     }
 
     /**
@@ -60,7 +66,9 @@ class InventoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $inventory = InventoryItem::find($id);
+
+        return view('inventory.edit', compact('inventory'));
     }
 
     /**
@@ -72,7 +80,32 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $inventory = $this->updateItem($request, $id);
+        $inventory->save();
+
+        return redirect('inventory')->with('success', 'Item saved successfully');
+    }
+    
+        /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \App\InventoryItem
+     */
+    private function updateItem(Request $request, $id) {
+        $inventoryItem = InventoryItem::findorNew($id);
+        $inventoryItem->code = $request->code;
+        $inventoryItem->size = $request->size;
+        $inventoryItem->brand = $request->brand;
+        $inventoryItem->quantity = $request->quantity;
+        $inventoryItem->minimum_quantity = $request->minimum_quantity;
+        $inventoryItem->price = $request->price;
+        $inventoryItem->saleable = $request->saleable ?? false;
+        $inventoryItem->name = $inventoryItem->getItemName();
+        $inventoryItem->description = $request->description;
+
+        return $inventoryItem;
     }
 
     /**
@@ -83,6 +116,9 @@ class InventoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $result = InventoryItem::destroy($id);
+        $result = $result? (object)['status'=>'success', 'message'=>'Item successfully deleted'] : (object)['status'=>'error', 'message'=>'Failed to delete item'];
+
+        return redirect('inventory')->with($result->status,$result->message);
     }
 }

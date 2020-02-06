@@ -18,13 +18,16 @@ class CreateInventoryItemsTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->string('size');
-            $table->text('description')->nullable;
+            $table->string('size_unit');
+            $table->text('description')->nullable();
             $table->string('brand'); // pireri, mrf,
             $table->decimal('price');
             $table->integer('quantity');
             $table->integer('minimum_quantity');
-            $table->boolean('saleable');
+            // $table->boolean('saleable')->default(1);
             $table->timestamps();
+
+            // $table->softDeletes();
         });
     }
 

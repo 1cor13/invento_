@@ -3,12 +3,22 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InventoryItem extends Model
 {
-    protected $fillable = ['name', 'make', 'code', 'price','quantity', 'description', 'size'];
-    //
+    // use SoftDeletes;
+    const SALEABLE = 1;
+
+    protected $fillable = ['name', 'brand', 'code', 'price','quantity', 'description', 'size'];
+    protected $attributes = ['saleable' => self::SALEABLE ];
+    
     public function orderLines() {
         return $this->hasMany(orderLine::class);
     }
+
+    public function getItemName() {
+        return "{$this->size} {$this->code} {$this->brand}";
+    }
+
 }

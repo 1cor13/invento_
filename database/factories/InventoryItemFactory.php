@@ -9,11 +9,13 @@ use Illuminate\Support\Str;
 $factory->define(InventoryItem::class, function (Faker $faker) {
     $brand = $faker->randomElement(['Avon','Bridgestone','Continental','Dunlop','Firestone','Goodyear','Hankook','Michelin','Pirelli','Uniroyal','Yokohama']);
     $size = random_int(9,30);
+    $size_unit = $faker->randomElement(["'",'"']);
     $code = strtoupper(Str::random(2)).random_int(1234,9999);
 
     return [
         'code' => "{$code}",
         'size' => "{$size}'",
+        // 'size_unit' => "{$size_unit}",
         'brand' => "{$brand}",
         'name' => "{$size}' {$code} {$brand}",
         'price' => rand(10,300),

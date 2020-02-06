@@ -17,3 +17,7 @@ Route::get('/', function () {
 
 Route::resource('mydata', 'SampleController');
 Route::resource('inventory', 'InventoryController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
