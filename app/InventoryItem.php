@@ -16,7 +16,12 @@ class InventoryItem extends Model
     public function orderLines() {
         return $this->hasMany(orderLine::class);
     }
-
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'item_order', 'item_id', 'order_id')
+            ->withPivot(['quantity', 'price'])
+            ->withTimestamps();
+    }
     public function getItemName() {
         return "{$this->size} {$this->code} {$this->brand}";
     }
