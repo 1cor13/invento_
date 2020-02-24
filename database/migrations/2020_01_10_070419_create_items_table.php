@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInventoryItemsTable extends Migration
+class CreateItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,21 @@ class CreateInventoryItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('inventory_items', function (Blueprint $table) {
+        Schema::create('items', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code');
             $table->string('name');
             $table->string('size');
-            $table->string('size_unit');
+            $table->string('size_unit')->default('"');
             $table->text('description')->nullable();
             $table->string('brand'); // pireri, mrf,
             $table->decimal('price');
             $table->integer('quantity');
             $table->integer('minimum_quantity');
-            // $table->boolean('saleable')->default(1);
+            $table->boolean('saleable');
             $table->timestamps();
 
-            // $table->softDeletes();
+            $table->softDeletes();
         });
     }
 
@@ -38,6 +38,6 @@ class CreateInventoryItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventory_items');
+        Schema::dropIfExists('items');
     }
 }

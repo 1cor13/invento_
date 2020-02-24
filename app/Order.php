@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Item;
 
 class Order extends Model
 {
@@ -17,6 +18,8 @@ class Order extends Model
 
     public function items()
     {
-        return $this->hasMany(OrderLine::class);
+        return $this->belongsToMany(Item::class)
+            ->withPivot(['quantity', 'price'])
+            ->withTimestamps();
     }
 }

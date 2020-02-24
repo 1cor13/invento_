@@ -16,22 +16,18 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('order_number')->unique();
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->index();
+            $table->unsignedBigInteger('customer_id')->index();
 
-            $table->string('customername');
-            $table->string('customeraddress')->nullable();
-            $table->string('customerphone')->nullable();
-            $table->string('customeremail')->nullable();
-            $table->string('orderItem'); // 'inventoryItem' from order-inventoryitems many-to-many association (an order can have many InventoryItems)
-            $table->string('subtotal');
-            $table->unsignedDecimal('discount'); // TODO: To be discussed
-            $table->unsignedDecimal('fees'); // TODO: To be discussed
-            $table->unsignedDecimal('taxes'); // TODO: To be discussed
+            $table->string('subtotal')->default(0);
+            $table->unsignedDecimal('discount')->default(0); // TODO: To be discussed
+            $table->unsignedDecimal('fees')->default(0); // TODO: To be discussed
+            $table->unsignedDecimal('taxes')->default(0); // TODO: To be discussed
+            $table->double('totalcost')->default(0);
             $table->text('notes')->nullable();
 
-            $table->double('totalcost');
             $table->timestamps();
-            $table->index('user_id');
+            $table->softDeletes();
         });
     }
 
