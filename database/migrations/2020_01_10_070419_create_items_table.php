@@ -18,7 +18,7 @@ class CreateItemsTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->string('size');
-            $table->string('size_unit')->default('"');
+            $table->enum('size_unit', ['"', "'"])->nullable()->default('"');
             $table->text('description')->nullable();
             $table->string('brand'); // pireri, mrf,
             $table->decimal('price');
