@@ -18,23 +18,36 @@ $factory->define(Order::class, function(Faker $faker) {
 
 $factory->afterCreating(Order::class, function ($order, $faker) {
 
-    $items = factory(Item::class, 2)->create();
+    // create new items and them or retrieve two items from the DB and use them
+    $items = factory(Item::class, 2)->create(); // will be a retrieval from database
+    // $itemsDB = Item::all()->take(2); // 
 
-    $itemsWithPivot = $items->mapWithKeys(function($item) use ($faker) {
+    $itemsWithPivot = $items->mapWithKeys(function($item) {
         return [
             $item->id => [
-                'quantity' => 1,
+                'quantity' => rand(1,5),
                 'price' => $item->price
             ]
         ];
     })->all();
 
-    $order->items()->sync($itemsWithPivot);
-
+    $order->items()->attach($itemsWithPivot);
 
     $order->subtotal = $order->items->reduce(function($carry, $orderItem) {
         return $carry + ($orderItem->pivot->price * $orderItem->pivot->quantity);
     }, 0);
+    $fees = 0;
+    $taxes = 0 * $order->subtotal;
+    $discount = 0;
+    $order->totalcost = $order->subtotal + $taxes + $fees - $discount;
 
     $order->save();
+    
+
+    // Update item inventory quantities
+    foreach ($items as $item) {
+        dump($item->quantity);
+        $item->quantity -= ((object)$itemsWithPivot[$item->id])->quantity; //$itemsWithPivot[$item->id]['quantity']
+        $item->save(); // use mass save so you hit the db once for all items.
+    }
 });
