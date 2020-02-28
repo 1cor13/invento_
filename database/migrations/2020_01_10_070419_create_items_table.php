@@ -24,7 +24,8 @@ class CreateItemsTable extends Migration
             $table->decimal('price');
             $table->integer('quantity');
             $table->integer('minimum_quantity');
-            $table->boolean('saleable');
+            $table->boolean('saleable')->default(true);
+            $table->boolean('depleted')->default(false);
             $table->timestamps();
 
             $table->softDeletes();

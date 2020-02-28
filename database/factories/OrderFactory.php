@@ -48,6 +48,8 @@ $factory->afterCreating(Order::class, function ($order, $faker) {
     foreach ($items as $item) {
         dump($item->quantity);
         $item->quantity -= ((object)$itemsWithPivot[$item->id])->quantity; //$itemsWithPivot[$item->id]['quantity']
+        $item->depleted = $item->quantity <= $item->minimum_quantity;
         $item->save(); // use mass save so you hit the db once for all items.
     }
+    
 });

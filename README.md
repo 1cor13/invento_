@@ -25,17 +25,17 @@ button on their own profile.
 the service. The items attached to a service form the cost of the service. The price of the service
 is basically cost of items + cost of labor. When recording service sale, items attached to the
 service but marked as optional will increase the final price of the service.
-4. For each item in the inventory, the following details will need to be kept: code (string) , size
+4. ~~For each item in the inventory, the following details will need to be kept: code (string) , size
 (string) , name (string) , cost (float) , saleable (boolean) , quantity (integer) ,
 minimum_quantity and brand . The name can either be generated or input directly by the
 data-entrant. When generating name of the item, use the size, code and brand - in that order.
 For example for a tyre 17' TH4212 Pirelli , 17' is the size, TH4212 is the code and Pirelli
 is the brand. minimum_quantity refers to the minimum stock quantity required at the shop.
 saleable simply informs whether the items is sold directly to a customer or not. Most items
-that are not sold directly to a customer are usually attached to a service.
-5. Whenever a sale is recorded, the quantity should always be updated. When the stock quantity
+that are not sold directly to a customer are usually attached to a service.~~
+5. ~~Whenever a sale is recorded, the quantity should always be updated. When the stock quantity
 reaches or is below the minimum_quantity , the items should be flagged as running out of
-stock. Show a paginated list of items that are running out of stock on the dashboard. Items that are completely out of stock i.e quantity = 0 cannot be added to a sale record.
+stock. Show a paginated list of items that are running out of stock on the dashboard. Items that are completely out of stock i.e quantity = 0 cannot be added to a sale record.~~
 6. Show basic reports as follows: a. On the dashboard: Total sales revenue (current month only), A
 count of sales (current month only), Count of Items. Count of Items Out of Stock. b. On the item
 details page: Total sales revenue (current month only), A count of sales (current month only)
