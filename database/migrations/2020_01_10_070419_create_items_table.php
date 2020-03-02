@@ -18,14 +18,14 @@ class CreateItemsTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->string('size');
-            $table->enum('size_unit', ['"', "'"])->nullable()->default('"');
+            $table->string('size_unit')->default('"');
             $table->text('description')->nullable();
             $table->string('brand'); // pireri, mrf,
             $table->decimal('price');
             $table->integer('quantity');
             $table->integer('minimum_quantity');
             $table->boolean('saleable')->default(true);
-            $table->boolean('depleted')->default(false);
+            $table->boolean('outofstock')->default(false);
             $table->timestamps();
 
             $table->softDeletes();

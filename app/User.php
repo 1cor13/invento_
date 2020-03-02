@@ -40,4 +40,16 @@ class User extends Authenticatable
     public function orders() {
         return $this->hasMany(Order::class);
     }
+
+    public function roles() {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasAnyRoles($roles) {
+        return !!($this->roles()->whereIn('name', $roles)->first());
+    }
+
+    public function hasRole($role) {
+        return !!($this->roles()->where('name', $role)->first());
+    }
 }
