@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'inventory'     => [
+    'item'     => [
         'title'          => 'Inventory',
         'title_singular' => 'Inventory',
         'fields'         => [

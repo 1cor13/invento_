@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route("inventory.store") }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route("items.store") }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group {{ $errors->has('code') ? 'has-error' : '' }}">                            
                             <label for="code">{{ trans('cruds.item.fields.code') }}</label>
@@ -119,7 +119,7 @@
         
                         <div>
                             <input class="btn btn-primary" type="submit" value="Save">
-                            <a href="{{ route('inventory.index') }}" class="btn btn-warning">Cancel</a>
+                            <a href="{{ route('items.index') }}" class="btn btn-warning">Cancel</a>
                         </div>
                     </form>
                 </div>

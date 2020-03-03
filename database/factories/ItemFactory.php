@@ -16,9 +16,10 @@ $factory->define(Item::class, function (Faker $faker) {
 
     return [
         'code' => $code,
-        'size' => "{$size}{$size_unit}",
+        'size' => $size,
+        'size_unit' => $size_unit,
         'brand' => $brand,
-        'name' => "{$size}' {$code} {$brand}",
+        'name' => "{$size}{$size_unit} {$code} {$brand}",
         'price' => rand(10,300),
         'description' => $faker->sentence,
         'quantity' => rand(50,100),

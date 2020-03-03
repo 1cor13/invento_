@@ -20,10 +20,11 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $item = Item::all();
+        $items = Item::paginate(15);
+        // apply pagnation.
         $title = 'Inventory Listing';
 
-        return view('item.index', compact('title','item'));
+        return view('items.index', compact('title','items'));
     }
 
     /**
@@ -36,7 +37,7 @@ class ItemController extends Controller
         $brands = ['Avon','Bridgestone','Continental','Dunlop','Firestone','Goodyear','Hankook','Michelin','Pirelli','Uniroyal','Yokohama']; // Brand::all();
         $item = new Item();
 
-        return view('item.create', compact('brands', 'item'));
+        return view('items.create', compact('brands', 'item'));
     }
 
     /**
@@ -45,12 +46,14 @@ class ItemController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
         $this->authorize('create', Item::class);
-        $item = Item::create($this->validateRequest());
 
-        return redirect('item')
+        $validItem = $this->validateRequest();
+        Item::create($this->generatedAttributes($validItem));
+
+        return redirect('items')
             ->with('success', 'Inventory item stored successfully');
     }
 
@@ -62,7 +65,7 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        return view('item.show', compact('item'));
+        return view('items.show', compact('item'));
     }
 
     /**
@@ -74,7 +77,7 @@ class ItemController extends Controller
     public function edit(Item $item)
     {
         $brands = ['Avon','Bridgestone','Continental','Dunlop','Firestone','Goodyear','Hankook','Michelin','Pirelli','Uniroyal','Yokohama'];
-        return view('item.edit', compact('item'));
+        return view('items.edit', compact('item', 'brands'));
     }
 
     /**
@@ -83,11 +86,12 @@ class ItemController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Item $item)
+    public function update(Request $request, Item $item)
     {
-        $item->update($this->validateRequest());
+        $validItem = $this->validateRequest();
+        $item->update($this->generatedAttributes($validItem));
 
-        return redirect('item')->with('success', 'Item saved successfully');
+        return redirect('items')->with('success', 'Item saved successfully');
     }
     
 
@@ -104,7 +108,7 @@ class ItemController extends Controller
         $result = $item->delete();
         $result = $result? (object)['status'=>'success', 'message'=>'Item successfully deleted'] : (object)['status'=>'error', 'message'=>'Failed to delete item'];
 
-        return redirect('item')->with($result->status,$result->message);
+        return redirect('items')->with($result->status,$result->message);
     }
 
     private function validateRequest() {
@@ -113,9 +117,21 @@ class ItemController extends Controller
             'size' => 'required',
             'brand' => 'required',
             'quantity' => 'numeric|required',
-            'minimum_quantity' => 'gt:0',
+            'minimum_quantity' => 'required|numeric',
             'saleable' => 'boolean',
             'price' => 'numeric|required'
         ]);
+    }
+
+    private function generatedAttributes(array $validItem) {
+        $item = (object) $validItem;
+        $validItem['name'] = $this->generateItemName($item->size, $item->code, $item->brand);
+        $validItem['saleable'] = $item->saleable ?? false;
+
+        return $validItem;
+    }
+
+    private function generateItemName(string $size, string $code, string $brand) {
+        return "{$size} {$code} {$brand}";
     }
 }

@@ -7,8 +7,8 @@
             <div class="card">
                 <div class="card-header">Inventory Overview</div>
                 @include('partials.flash')
-                <a href="{{ route('inventory.create') }}">
-                    <button type="button" class="btn btn-warning float-left ml-1">Add Inventory</button>
+                <a href="{{ route('items.create') }}">
+                    <button type="button" class="btn btn-warning float-left ml-1">Add item</button>
                 </a>
                 
                 <div class="card-body">
@@ -28,7 +28,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($inventory as $item)
+                            @foreach ($items as $item)
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
                                     <td>{{ $item->code }}</td>
@@ -40,10 +40,10 @@
                                     <td>{{ $item->price }}</td>
                                     <td>{{ $item->saleable }}</td>
                                     <td>
-                                        <a href="{{ route('inventory.edit', $item->id) }}">
+                                        <a href="{{ route('items.edit', $item->id) }}">
                                             <button type="button" class="btn btn-primary float-left ml-1">Edit</button>
                                         </a>
-                                        <form action="{{ route('inventory.destroy', $item->id) }}" method="POST">
+                                        <form action="{{ route('items.destroy', $item->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger float-left ml-1">Delete</button>
@@ -51,10 +51,21 @@
                                     </td>
                                 </tr>
                             @endforeach
+
+                            <div class="row">
+                                <div class="col-10 text-center">
+                                    {{ $items->links() }}
+                                </div>
+                            </div>
                         </tbody>                        
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center pt-4">
+            {{ $items->links() }}
         </div>
     </div>
 </div>

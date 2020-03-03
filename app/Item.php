@@ -10,7 +10,7 @@ class Item extends Model
     use SoftDeletes;
     const SALEABLE = 1;
 
-    protected $fillable = ['name', 'brand', 'code', 'price','quantity', 'description', 'size', 'saleable'];
+    protected $fillable = ['name', 'brand', 'code', 'price','quantity', 'description', 'size', 'saleable', 'minimum_quantity'];
     protected $attributes = ['saleable' => self::SALEABLE ];
     
     // public function orderLines() {
@@ -22,10 +22,6 @@ class Item extends Model
         return $this->belongsToMany(Order::class)
             ->withPivot(['quantity', 'price'])
             ->withTimestamps();
-    }
-    
-    public function getItemName() {
-        return "{$this->size}' {$this->code} {$this->brand}";
     }
 
 }

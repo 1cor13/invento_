@@ -41,7 +41,7 @@ class ItemPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasAnyRoles(['dataentrant', 'manager']);
     }
 
     /**
@@ -53,7 +53,7 @@ class ItemPolicy
      */
     public function update(User $user, Item $item)
     {
-        //
+        return $user->hasAnyRoles(['dataentrant', 'manager']);
     }
 
     /**
@@ -89,6 +89,6 @@ class ItemPolicy
      */
     public function forceDelete(User $user, Item $item)
     {
-        //
+        return $user->hasRole('admin');
     }
 }
