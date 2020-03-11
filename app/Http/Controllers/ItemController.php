@@ -10,7 +10,8 @@ class ItemController extends Controller
 
     public function __construct()
     {
-        $this->middleware("auth");
+        // $this->middleware("auth");
+        $this->authorizeResource(Item::class, 'item');
     }
 
     /**
@@ -20,8 +21,8 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::paginate(15);
         // apply pagnation.
+        $items = Item::paginate(15);
         $title = 'Inventory Listing';
 
         return view('items.index', compact('title','items'));
@@ -48,7 +49,7 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Item::class);
+        // $this->authorize('create', Item::class);
 
         $validItem = $this->validateRequest();
         Item::create($this->generatedAttributes($validItem));
@@ -103,12 +104,12 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        $this->authorize('destroy', Item::class);
+        // $this->authorize('destroy', Item::class);
 
         $result = $item->delete();
         $result = $result? (object)['status'=>'success', 'message'=>'Item successfully deleted'] : (object)['status'=>'error', 'message'=>'Failed to delete item'];
 
-        return redirect('items')->with($result->status,$result->message);
+        return redirect('items')->with($result->status, $result->message);
     }
 
     private function validateRequest() {
@@ -116,7 +117,7 @@ class ItemController extends Controller
             'code' => 'required|min:3',
             'size' => 'required',
             'brand' => 'required',
-            'quantity' => 'numeric|required',
+            'quantity' => 'numeric|required|gt:minimum_quantity',
             'minimum_quantity' => 'required|numeric',
             'saleable' => 'boolean',
             'price' => 'numeric|required'
