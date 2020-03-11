@@ -14,6 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+// Route::post('/items', 'ItemController@store');
 Auth::routes();
 
 Route::resource('items', 'ItemController');
