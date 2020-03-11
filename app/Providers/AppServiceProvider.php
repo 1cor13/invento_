@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Item;
+use App\ItemOrderPivot;
 use App\Observers\ItemObserver;
+use App\Observers\ItemOrderPivotObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
@@ -28,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191); // fixes a windows bug
         Item::observe(ItemObserver::class);
+        ItemOrderPivot::observe(ItemOrderPivotObserver::class);
     }
 }
