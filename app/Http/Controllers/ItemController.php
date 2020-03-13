@@ -10,7 +10,6 @@ class ItemController extends Controller
 
     public function __construct()
     {
-        // $this->middleware("auth");
         $this->authorizeResource(Item::class, 'item');
     }
 
@@ -49,13 +48,14 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->authorize('create', Item::class);
-
         $validItem = $this->validateRequest();
-        Item::create($this->generatedAttributes($validItem));
-
+        $item = Item::create($this->generatedAttributes($validItem));
+;
         return redirect('items')
-            ->with('success', 'Inventory item stored successfully');
+            ->with([
+                'success' => 'Item saved successfully',
+                'item' =>$item
+            ]);
     }
 
     /**
@@ -92,7 +92,11 @@ class ItemController extends Controller
         $validItem = $this->validateRequest();
         $item->update($this->generatedAttributes($validItem));
 
-        return redirect('items')->with('success', 'Item saved successfully');
+        return redirect('items')
+            ->with([
+                'success' => 'Item saved successfully',
+                'item' => $item
+            ]);
     }
     
 
