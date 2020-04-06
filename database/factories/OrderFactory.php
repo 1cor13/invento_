@@ -19,13 +19,13 @@ $factory->define(Order::class, function(Faker $faker) {
 $factory->afterCreating(Order::class, function ($order, $faker) {
 
     // create new items and them or retrieve two items from the DB and use them
-    $items = factory(Item::class, 2)->create(); // will be a retrieval from database
+    $items = Item::all()->take(2) ?? factory(Item::class, 2)->create(); // will be a retrieval from database
     // $itemsDB = Item::all()->take(2); // 
 
     $itemsWithPivot = $items->mapWithKeys(function($item) {
         return [
             $item->id => [
-                'quantity' => rand(1,5),
+                'quantity' => rand(1, $item->quantity),
                 'price' => $item->price
             ]
         ];

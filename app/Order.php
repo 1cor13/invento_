@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Item;
 use App\ItemOrderPivot;
+use App\Customer;
 
 class Order extends Model
 {
@@ -19,8 +20,13 @@ class Order extends Model
 
     public function items()
     {
-        return $this->belongsToMany(Item::class)->using(ItemOrderPivot::class)
+        return $this->belongsToMany(Item::class)
+            ->using(ItemOrderPivot::class)
             ->withPivot(['quantity', 'price'])
             ->withTimestamps();
+    }
+
+    public function customer() {
+        return $this->belongsTo(Customer::class);
     }
 }

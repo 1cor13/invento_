@@ -20,5 +20,13 @@ class ItemObserver {
             Mail::to($manager->email)->send(new InventoryDepletionMail(), compact('item'));
         }
     }
+
+    public function reduceInventory(Item $item) {
+        if ($item->quantity <= $item->minimum_quantity && !$item->depleted) {
+            $item->depleted = true;
+            $item->save();
+        }
+
+    }
 }
 

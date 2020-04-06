@@ -12,11 +12,13 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         // Role::truncate();
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1;')
 
-        DB::table('roles')->truncate();
-        Role::create(['name' => 'admin']);
-        Role::create(['name' => 'manager']);
-        Role::create(['name' => 'dataentrant']);
+        DB::table('roles')->delete();
+        Role::create(['name' => 'admin']); // id = 1
+        Role::create(['name' => 'manager']); // id = 2
+        Role::create(['name' => 'dataentrant']); // id = 3
     }
 }

@@ -54,7 +54,7 @@ class ItemController extends Controller
         return redirect('items')
             ->with([
                 'success' => 'Item saved successfully',
-                'item' =>$item
+                'item' => $item
             ]);
     }
 
@@ -94,7 +94,7 @@ class ItemController extends Controller
 
         return redirect('items')
             ->with([
-                'success' => 'Item saved successfully',
+                'success' => 'Item updated successfully',
                 'item' => $item
             ]);
     }

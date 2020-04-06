@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Role;
+use App\ItemOrderPivot;
 
 class UsersTableSeeder extends Seeder
 {
@@ -14,8 +15,17 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         User::truncate();
-        DB::table('role_user')->truncate();
+        ItemOrderPivot::truncate();
+        Schema::enableForeignKeyConstraints();
+
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // User::truncate();
+
+        // DB::table('users')->delete();
+        // DB::table('role_user')->delete();
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $adminRole = Role::where('name', 'admin')->first();
         $managerRole = Role::where('name', 'manager')->first();

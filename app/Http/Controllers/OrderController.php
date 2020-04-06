@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Item;
 use App\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    /**
+     * Apply authentication policy as middleware
+     */
+    public function __construct() {
+        $this->authorizeResource(Order::class, 'order');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +22,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Order::paginate(15);
+        return view('orders.index', compact('orders'));
     }
 
     /**
@@ -24,8 +33,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Order::class);
-        //
+       $order = new Order();
+
+       return view('orders.create', compact('order'));
     }
 
     /**
@@ -36,7 +46,28 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $items = collect($request->item_orders);
+        $itemsWithPivot = $items->mapWithKeys(function($item) {     
+            $itemRaw = Item::findOrFail($item['item_id']);
+            return [
+                $item['item_id'] => [
+                    'quantity' => $item['quantity'],
+                    'price' => $itemRaw->price * $item['quantity']
+                ]
+            ];
+        })->all();
+
+        $order = Order::updateOrCreate([
+            'order_number' => rand(),
+            'customer_id' => $request->customer_id,
+            'user_id' => auth()->user()->id,
+        ]);
+        $order->items()->attach($itemsWithPivot);
+        $order->save();
+    
+        // add an observer to ItemOrderPivot to fire events like is inventory quantity sufficient or not so an order can be stopped or a notification sent to manager incase the inventory is less than min
+        
+        return response()->json($order->toArray());
     }
 
     /**
@@ -83,14 +114,20 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        $this->authorize('create', Order::class);
 
-        //
     }
 
     private function validateRequest() {
         return request()->validate([
-            ''
+            'order_number' => 'required|unique:orders,order_number',
+            'subtotal' => 'required|gt:0',
+            'customer_id' => 'required',
+            'user_id' => 'required'
         ]);
+    }
+
+    private function forceDelete(Order $order) 
+    {
+        $order->forceDelete();
     }
 }
