@@ -32,6 +32,7 @@ class ItemOrderPivotObserver {
                 dump("======= SENDING MAIL ======");
                 // Mail::to($manager->email)->send(new InventoryDepletionMail(), compact('item'));
             }
+            $item->save();
         } else {
             // cancel this update to the order, and notify on ui
             return false;
