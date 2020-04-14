@@ -16,8 +16,29 @@ use Illuminate\Support\Facades\Session;
 class ItemTest extends TestCase
 {
     // use WithoutMiddleware;
-    // // use RefreshDatabase;
-    use DatabaseMigrations;
+    use RefreshDatabase;
+    // use DatabaseMigrations;
+    var $dataentrant; var $manager; var $admin;
+
+    public function setUp() :void {
+        parent::setUp();
+        $this->user = factory(User::class)->create();
+        $this->user->roles()->save(Role::create(['name' => 'dataentrant'])); // data entrant user;
+
+        $this->manager = factory(User::class)->create();
+        $this->manager->roles()->save(Role::create(['name' => 'manager']));
+
+        $this->admin = factory(User::class)->create();
+        $this->admin->roles()->save(Role::create(['name' => 'admin']));
+
+        $user = factory(User::class)->create(['password' => bcrypt($password = 'password')]);
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => $password
+        ]);
+        $response->assertRedirect('/home');
+        $this->assertAuthenticatedAs($user);
+    }
 
     // /**
     //  * A basic test example.
@@ -29,6 +50,7 @@ class ItemTest extends TestCase
         $this->withoutExceptionHandling();
         // $this->refreshDatabase();
         $this->withoutMiddleware();
+        $this->setUpUsers();
         $item = factory(Item::class)->make()->toArray();
         // dump($item);
         $response = $this->post('items',$item);
@@ -47,51 +69,52 @@ class ItemTest extends TestCase
 
     public function testAddInventoryAsDataEntrant() {
         // dataentrant is authorized by policy;
-        $user = factory(User::class)->create();
-        $user->roles()->save(Role::create(['name' => 'dataentrant']));
         $item = factory(Item::class)->make();
-        $response = $this->actingAs($user)->post('items', $item->toArray());
+        $response = $this->actingAs($this->dataentrant)->post('items', $item->toArray());
         $response->assertRedirect('/items');
         $response->assertSessionHas('success', 'Item saved successfully');
     }
 
     public function testAddInventoryAsManager() {
         // manager is authorized by policy;
-        $user = factory(User::class)->create();
-        $user->roles()->save(Role::create(['name' => 'manager']));
         $item = factory(Item::class)->make();
-        $response = $this->actingAs($user)->post('items', $item->toArray());
+        $response = $this->actingAs($this->manager)->post('items', $item->toArray());
         $response->assertRedirect('/items');
         $response->assertSessionHas('success', 'Item saved successfully');
     }
 
     public function testAddInventoryAsAdmin() {
         // admin blocked by policy
-        $admin = factory(User::class)->create();
-        $admin->roles()->save(Role::create(['name' => 'admin']));
         $item = factory(Item::class)->make();
-        $response = $this->actingAs($admin)->post('items', $item->toArray());
+        $response = $this->actingAs($this->admin)->post('items', $item->toArray());
         $response->assertStatus(403); 
     }
 
     public function testDeletingItemAsDataEntrant() {
         factory(Item::class,5)->create();
-        $user = factory(User::class)->create();
-        $user->roles()->save(Role::create(['name' => 'dataentrant']));
-        
         $item = Item::all()->random();
-        $response = $this->actingAs($user)->delete("items/{$item->id}");
-        $response->assertStatus(403); // un authorized operation for dataentrant
+        
+        // un authorized operation for dataentrant
+        $response = $this->actingAs($this->dataentrant)->delete("items/{$item->id}");
+        $response->assertStatus(403);
 
         // manager can delete
-        $user = factory(User::class)->create();
-        $user->roles()->save(Role::create(['name' => 'manager'])); 
         $item = Item::all()->random();
-        $response = $this->actingAs($user)->delete("items/{$item->id}");
+        $response = $this->actingAs($this->manager)->delete("items/{$item->id}");
         $response->assertRedirect('items')
             ->assertSessionHas('success', 'Item successfully deleted');             
     }
 
+    private function setupUsers() {
+        $this->user = factory(User::class)->create();
+        $this->user->roles()->save(Role::create(['name' => 'dataentrant'])); // data entrant user;
+
+        $this->manager = factory(User::class)->create();
+        $this->manager->roles()->save(Role::create(['name' => 'manager']));
+
+        $this->admin = factory(User::class)->create();
+        $this->admin->roles()->save(Role::create(['name' => 'admin']));
+    }
     // public function testSoftDeleteItemAsManager() {
     //     //
     // }

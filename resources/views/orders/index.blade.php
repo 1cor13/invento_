@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Inventory Overview</div>
+                <div class="card-header">Order Overview</div>
                 @include('partials.flash')
                 <a href="{{ route('orders.create') }}">
                     <button type="button" class="btn btn-warning float-left ml-1">Add item</button>
@@ -24,22 +24,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($orders as $item)
+                            @foreach ($orders as $order)
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
-                                    <td>{{ $item->code }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{ $item->brand }}</td>
-                                    <td>{{ $item->size }}</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>{{ $item->minimum_quantity }}</td>
-                                    <td>{{ $item->price }}</td>
-                                    <td>{{ $item->saleable }}</td>
+                                    <td>{{ $order->code }}</td>
+                                    <td>{{ $order->name }}</td>
+                                    <td>{{ $order->brand }}</td>
+                                    <td>{{ $order->size }}</td>
+                                    <td>{{ $order->quantity }}</td>
+                                    <td>{{ $order->minimum_quantity }}</td>
+                                    <td>{{ $order->price }}</td>
+                                    <td>{{ $order->saleable }}</td>
                                     <td>
-                                        <a href="{{ route('orders.edit', $item->id) }}">
+                                        <a href="{{ route('orders.edit', $order->id) }}">
                                             <button type="button" class="btn btn-primary float-left ml-1">Edit</button>
                                         </a>
-                                        <form action="{{ route('orders.destroy', $item->id) }}" method="POST">
+                                        <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger float-left ml-1">Delete</button>

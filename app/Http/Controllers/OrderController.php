@@ -66,8 +66,13 @@ class OrderController extends Controller
         $order->save();
     
         // add an observer to ItemOrderPivot to fire events like is inventory quantity sufficient or not so an order can be stopped or a notification sent to manager incase the inventory is less than min
-        
-        return response()->json($order->toArray());
+        return redirect('orders')
+            ->with([
+                'success' => 'Item saved successfully',
+                'order' => $order
+            ]);
+
+        // return view('orders.index'); // response()->json($order->toArray());
     }
 
     /**
