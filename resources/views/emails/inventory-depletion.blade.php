@@ -1,8 +1,8 @@
 @component('mail::message')
 # Inventory is running out
-
-{{ $item.name}} is running out.
-{{ $item.quantity }} items only remain.
+Dear Manager {{ $manager->name }}
+{{ $item->name}} is running out.
+{{ $item->quantity }} items only remain.
 
 @component('mail::button', ['url' => ''])
 Button Text

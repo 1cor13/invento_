@@ -56,7 +56,8 @@ class OrderTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $this->withoutMiddleware();
-        // $this->artisan("db:seed");       
+        // $this->artisan("db:seed"); 
+        dump("========testCreateOrder=====");      
             
         $item = factory(Item::class)->create();
         $itemOrderPivot = new ItemOrderPivot([
@@ -68,7 +69,7 @@ class OrderTest extends TestCase
             'item_orders' => [$itemOrderPivot->toArray()],
             'customer_id' => $this->customer->id,
         ];
-
+dump($data);
         $response = $this->actingAs($this->user)
             ->post('orders', $data);
 
@@ -117,7 +118,7 @@ class OrderTest extends TestCase
     //     $this->user = factory(User::class)->create();
     //     $this->user->roles()->save(Role::create(['name' => 'dataentrant'])); // data entrant user;
 
-    //     $this->manager = factory(User::class)->create(['email' => 'joannakwagala@gmail.com']);
+    //     $this->manager = factory(User::class)->create();
     //     $this->manager->roles()->save(Role::create(['name' => 'manager']));
         
     //     $this->customer = factory(Customer::class)->create();

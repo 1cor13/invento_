@@ -22,23 +22,23 @@ class ItemOrderPivotObserver {
             $item->quantity = $newQuantity;
             $item->depleted = $newQuantity <= 0 || $newQuantity <= $item->minimum_quantity;
             $order->subtotal += ($itemOrder->quantity * $item->price);
-            dump("======= testing =======");
-            if ($item->depleted) {
-                // send email to manager
-                // $managerRole = Role::where('name', 'manager')->first() ?? Role::create(['name'=>'manager']);
-                // $manager = $managerRole->user->first();
-
-                // Mail::to($manager->email)->send(new InventoryDepletionMail(), compact('item'));
-                dump("======= SENDING MAIL ======");
-                // Mail::to($manager->email)->send(new InventoryDepletionMail(), compact('item'));
-            }
             $item->save();
+            $manager = Role::where('name', 'manager')->first()->users->first();
+            dump("======= SENDING MAIL normal ======");
+            Mail::to("gratefulderrick@gmail.com")->send(new InventoryDepletionMail($item, $manager));
+
+            dump("======= testing =======");
+            if ($item->depleted) {                
+                $manager = Role::where('name', 'manager')->first()->users->first()->email;
+                dump("======= SENDING MAIL real depleted ======");
+                Mail::to('ab87cbbef7-12ddc3@inbox.mailtrap.io')->send(new InventoryDepletionMail(), compact('item', 'manager'));
+            }
         } else {
             // cancel this update to the order, and notify on ui
             return false;
         }
     }
-
+    
     public function reduceInventory(ItemOrderPivot $itemOrder) {
         $item = $itemOrder->item;
         $order = $itemOrder->order;

@@ -1,4 +1,5 @@
-<?php
+exit
+code<?php
 
 use Illuminate\Database\Seeder;
 use App\Role;

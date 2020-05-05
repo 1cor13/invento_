@@ -46,6 +46,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        dump($request);
         $items = collect($request->item_orders);
         $itemsWithPivot = $items->mapWithKeys(function($item) {     
             $itemRaw = Item::findOrFail($item['item_id']);
